@@ -1,14 +1,23 @@
 const Agency = require("@adasuite/agentgpt");
 const fs = require("fs");
 
-module.export = async function init({ OpenAI_Key, task, procedure_output }) {
-  const Recruit = Agency({
+module.export = async function init({
+  OpenAI_Key,
+  task,
+  procedure_output,
+  building_prompt,
+  debug,
+}) {
+  const Agency_config = {
     API_KEY: OpenAI_Key,
-  });
+  };
+  if (debug) Agency_config.debug = true;
+  const Recruit = Agency(Agency_config);
 
   const AgentRecruit = Recruit.new_agent({
     identity: "",
     analysis:
+      building_prompt ||
       "Based on the task, create set of LLM agents that connect to other LLM agents in order to complete a task. Make each agent focus on a specific thing.",
     output: JSON.stringify([
       {
