@@ -1,9 +1,8 @@
 const Agency = require("@adasuite/agentgpt");
 const fs = require("fs");
-
-module.export = async function init({
+const AgentRecruit = null;
+module.exports = function init({
   OpenAI_Key,
-  task,
   procedure_output,
   building_prompt,
   debug,
@@ -13,7 +12,6 @@ module.export = async function init({
   };
   if (debug) Agency_config.debug = true;
   const Recruit = Agency(Agency_config);
-
   const AgentRecruit = Recruit.new_agent({
     identity: "",
     analysis:
@@ -30,6 +28,12 @@ module.export = async function init({
       "...",
     ]),
   });
+  return {
+    new_procedure: new_procedure,
+  };
+};
+
+async function new_procedure({ task, procedure_output }) {
   let agent_list = await AgentRecruit.analyze(
     JSON.stringify({
       task: task,
@@ -43,7 +47,7 @@ module.export = async function init({
   fs.writeFileSync(procedure_output, JSON.stringify(agents));
   console.log(agents);
   return start(agents);
-};
+}
 
 function start(agents_list) {
   let agents = {};
